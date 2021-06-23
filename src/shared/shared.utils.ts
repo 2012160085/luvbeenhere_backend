@@ -19,5 +19,13 @@ export const uploadPhoto = (async (file, userId) => {
             ACL: "public-read",
         })
         .promise()
+        .then(
+            function (data) {
+                console.log(data)
+            },
+            function (err) {
+                console.log(err)
+            }
+        )
     return "";
 });

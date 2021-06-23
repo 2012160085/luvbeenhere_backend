@@ -21,3 +21,51 @@ model User {
   updatedAt DateTime @updatedAt
 
 }
+
+model Date {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  mainCard   Card?    @relation(name: "mainCard", fields: [mainCardId], references: [id])
+  mainCardId Int?
+  cards      Card[]
+  title      String
+  desc       String?
+  ratings    Rating[]
+}
+
+model Card {
+  id               Int      @id @default(autoincrement())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  date             Date     @relation(fields: [dateId], references: [id])
+  representingDate Date?    @relation("mainCard")
+  dateId           Int
+  title            String
+  desc             String?
+  file             String
+  locateX          Float
+  locateY          Float
+  place            Place    @relation(fields: [placeId], references: [id])
+  placeId          Int
+}
+
+model Place {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cards     Card[]
+  ratings   Rating[]
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  place     Place    @relation(fields: [placeId], references: [id])
+  date      Date     @relation(fields: [dateId], references: [id])
+  rate      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cardId    Int
+  placeId   Int
+  dateId    Int
+}
