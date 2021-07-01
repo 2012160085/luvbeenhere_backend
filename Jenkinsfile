@@ -29,10 +29,18 @@ pipeline {
                     remote.password = RM_PASSWD 
                     remote.allowAnyHosts = true
 
+                    def remotesu = [:]
+                    remote.name = 'dev_server'
+                    remote.host = 'localhost'
+                    remote.user = 'root' 
+                    remote.password = RM_PASSWD 
+                    remote.allowAnyHosts = true
+
                     def docker_compose_file = sh(returnStdout: true, script: 'base64 -w0 docker-compose.yml').trim()
 
                     sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ~/dev/luvbeenhere/be/docker-compose.yml"""
                     sshCommand remote: remote, failOnError: false, command: """docker stop lbh_be_dev"""
+                    sshPut remote: remotesu, from: 'lbh_be_dev', into: '/etc/nginx/sites-available'
                     sshCommand remote: remote, command: """cd ~/dev/luvbeenhere/be && docker-compose up --detach --force-recreate"""
                 }
             }
