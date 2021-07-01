@@ -22,9 +22,9 @@ pipeline {
                 script{
                     def remote = [:]
                     remote.name = 'dev_server'
-                    remote.host = RM_HOST
-                    remote.user = RM_USER
-                    remote.password = RM_PASSWD
+                    remote.host = 'localhost'
+                    remote.user = RM_USER 
+                    remote.password = RM_PASSWD 
                     remote.allowAnyHosts = true
                     sshCommand remote: remote, command: "ls -lrt"
                 }
