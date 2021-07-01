@@ -32,7 +32,7 @@ export const protectedResolver: ProtectedResolver = (resolver) => (root, args, c
     } else {
       return {
         ok: false,
-        error: "Please log in to perform this action.",
+        error: "Please log in to perform this action",
       };
     }
   }
