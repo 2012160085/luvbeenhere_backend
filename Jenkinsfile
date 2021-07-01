@@ -1,16 +1,32 @@
 pipeline {
     agent { label 'master'}
     environment {
-        SVC_ACCOUNT_KEY = credentials('dockerio')
+        DOCKER_CRED_BASE64 = credentials('dockerio')
+        RM_HOST = credentials('rm_host')
+        RM_USER = credentials('rm_user')
+        RM_PASSWD = credentials('rm_passwd')
     }
     stages{
-        stage('Install node dependency'){
+        stage('Build BE Image'){
             steps {
                 script{
                     sh 'mkdir -p ~/.docker'
-                    sh """echo ${SVC_ACCOUNT_KEY} | base64 -d > ~/.docker/config.json"""
+                    sh """echo ${DOCKER_CRED_BASE64} | base64 -d > ~/.docker/config.json"""
                     sh """docker build --tag bieberlee/luvbeenhere_backend:latest .""" 
                     sh """docker push bieberlee/luvbeenhere_backend:latest"""
+                }
+            }
+        }
+        stage('Run Container'){
+            steps {
+                script{
+                    def remote = [:]
+                    remote.name = 'dev_server'
+                    remote.host = RM_HOST
+                    remote.user = RM_USER
+                    remote.password = RM_PASSWD
+                    remote.allowAnyHosts = true
+                    sshCommand remote: remote, command: "ls -lrt"
                 }
             }
         }
