@@ -31,6 +31,7 @@ pipeline {
 
                     sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ~/dev/luvbeenhere/be/docker-compose.yml"""
                     sshCommand remote: remote, command: """cd ~/dev/luvbeenhere/be"""
+                    sshCommand remote: remote, command: """ls"""
                     sshCommand remote: remote, command: """docker-compose up"""
                 }
             }
