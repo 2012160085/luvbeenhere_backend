@@ -5,6 +5,7 @@ pipeline {
         RM_HOST = credentials('rm_host')
         RM_USER = credentials('rm_user')
         RM_PASSWD = credentials('rm_passwd')
+        DOTENV = credentials('lhb_be_dev_dotenv')
     }
     stages{
         stage('Build BE Image'){
@@ -12,6 +13,7 @@ pipeline {
                 script{
                     sh 'mkdir -p ~/.docker'
                     sh """echo ${DOCKER_CRED_BASE64} | base64 -d > ~/.docker/config.json"""
+                    sh """echo ${DOTENV} | base64 -d > App/.env"""
                     sh """docker build --tag bieberlee/luvbeenhere_backend:latest .""" 
                     sh """docker push bieberlee/luvbeenhere_backend:latest"""
                 }
