@@ -4,7 +4,7 @@ pipeline {
         stage('Install node dependency'){
             steps {
                 script{
-                    sh """echo hello"""
+                    sh """"""
                 }
             }
         }
