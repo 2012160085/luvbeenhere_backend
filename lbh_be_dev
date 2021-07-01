@@ -1,5 +1,5 @@
 server {
-    listen 80;
+    listen 54000;
     server_name devapi.luvbeenhere.com;
     location / {
       proxy_set_header Host $http_host;
