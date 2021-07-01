@@ -45,5 +45,20 @@ pipeline {
                 }
             }
         }
+        stage('Nginx Setting'){
+            steps {
+                script{
+                    def remotesu = [:]
+                    remotesu.name = 'dev_server_su'
+                    remotesu.host = 'localhost'
+                    remotesu.user = 'root' 
+                    remotesu.password = RM_PASSWD 
+                    remotesu.allowAnyHosts = true
+
+                    sshPut remote: remotesu, from: 'lbh_be_dev', into: '/etc/nginx/sites-available'
+                    sshCommand remote: remotesu, command: """service nginx restart"""
+                }
+            }
+        }
     }
 }
