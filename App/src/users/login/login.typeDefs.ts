@@ -7,6 +7,6 @@ export default gql`
     token: String
   }
   type Mutation {
-    login(username: String!, password: String!, aaa: String!): LoginResult!
+    login(username: String!, password: String!): LoginResult!
   }
 `;
