@@ -30,11 +30,11 @@ pipeline {
                     remote.allowAnyHosts = true
 
                     def remotesu = [:]
-                    remote.name = 'dev_server'
-                    remote.host = 'localhost'
-                    remote.user = 'root' 
-                    remote.password = RM_PASSWD 
-                    remote.allowAnyHosts = true
+                    remotesu.name = 'dev_server_su'
+                    remotesu.host = 'localhost'
+                    remotesu.user = 'root' 
+                    remotesu.password = RM_PASSWD 
+                    remotesu.allowAnyHosts = true
 
                     def docker_compose_file = sh(returnStdout: true, script: 'base64 -w0 docker-compose.yml').trim()
 
