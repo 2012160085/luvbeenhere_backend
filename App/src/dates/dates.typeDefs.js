@@ -8,5 +8,6 @@ export default gql`
         title: String!     
         desc: String      
         ratings: [Rating]
+        testparam: Int!
     }
 `
