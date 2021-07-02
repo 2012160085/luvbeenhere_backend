@@ -40,7 +40,6 @@ pipeline {
 
                     sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ~/dev/luvbeenhere/be/docker-compose.yml"""
                     sshCommand remote: remote, failOnError: false, command: """docker stop lbh_be_dev"""
-                    sshPut remote: remotesu, from: 'lbh_be_dev', into: '/etc/nginx/sites-available'
                     sshCommand remote: remote, command: """cd ~/dev/luvbeenhere/be && docker-compose up --detach --force-recreate"""
                 }
             }
