@@ -1,11 +1,12 @@
 import { gql } from "apollo-server-express";
 
 export default gql`
-    type Place{
+    type Photo{
         id: Int!
-        name: String!
         posX: Float!
         posY: Float!
-        visits: [Visit]
+        file: String
+        datetime: String
+        visit: Visit!
     }
 `

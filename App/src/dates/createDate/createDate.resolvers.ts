@@ -2,10 +2,18 @@ import { Resolvers } from "../../types";
 
 const resolvers: Resolvers = {
     Mutation: {
-        createData: () => {
+        createDate: async (_, { name, yyyymmdd }, { client }) => {
+            await client.date.create({
+                data: {
+                    name,
+                    yyyymmdd,
+                }
+            });
             return {
                 ok: true
             }
         }
     }
 }
+
+export default resolvers;

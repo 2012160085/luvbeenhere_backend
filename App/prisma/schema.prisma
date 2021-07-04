@@ -19,53 +19,63 @@ model User {
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 }
 
 model Date {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  mainCard   Card?    @relation(name: "mainCard", fields: [mainCardId], references: [id])
-  mainCardId Int?
-  cards      Card[]
-  title      String
-  desc       String?
-  ratings    Rating[]
+  id        Int      @id @default(autoincrement())
+  name      String
+  yyyymmdd  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visits    Visit[]
 }
 
-model Card {
-  id               Int      @id @default(autoincrement())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  date             Date     @relation(fields: [dateId], references: [id])
-  representingDate Date?    @relation("mainCard")
-  dateId           Int
-  title            String
-  desc             String?
-  file             String
-  locateX          Float
-  locateY          Float
-  place            Place    @relation(fields: [placeId], references: [id])
-  placeId          Int
+model Visit {
+  id        Int      @id @default(autoincrement())
+  name      String
+  date      Date     @relation(fields: [dateId], references: [id])
+  place     Place    @relation(fields: [placeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dateId    Int
+  placeId   Int
+  photos    Photo[]
+  rating    Rating?
 }
 
 model Place {
   id        Int      @id @default(autoincrement())
+  name      String
+  posX      Float
+  posY      Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  cards     Card[]
-  ratings   Rating[]
+  visits    Visit[]
+}
+
+model Photo {
+  id        Int      @id @default(autoincrement())
+  posX      Float
+  posY      Float
+  file      String
+  datetime  DateTime
+  visit     Visit    @relation(fields: [visitId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  visitId   Int
 }
 
 model Rating {
   id        Int      @id @default(autoincrement())
-  place     Place    @relation(fields: [placeId], references: [id])
-  date      Date     @relation(fields: [dateId], references: [id])
-  rate      Int
+  rating    Int
+  visit     Visit    @relation(fields: [visitId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  cardId    Int
-  placeId   Int
-  dateId    Int
+  visitId   Int
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
