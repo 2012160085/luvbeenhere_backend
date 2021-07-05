@@ -22,8 +22,10 @@ const resolvers: Resolvers = {
                 }
             }
             if (files) {
-                const upload = uploadPhoto(files, "enms")
-                console.log(upload);
+                files.forEach(element => {
+                    const upload = uploadPhoto(element, "enms")
+                    console.log(upload);
+                });
             }
             await client.visit.create({
                 data: {

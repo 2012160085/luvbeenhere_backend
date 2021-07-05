@@ -34,11 +34,11 @@ model Visit {
   id        Int      @id @default(autoincrement())
   name      String
   date      Date     @relation(fields: [dateId], references: [id])
-  place     Place    @relation(fields: [placeId], references: [id])
+  place     Place?   @relation(fields: [placeId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   dateId    Int
-  placeId   Int
+  placeId   Int?
   photos    Photo[]
   rating    Rating?
 }

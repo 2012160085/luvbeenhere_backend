@@ -6,7 +6,7 @@ export default gql`
             name: String!,
             dateId: Int!,
             placeId: Int,
-            files: Upload!
+            files: [Upload]!
             rating: Int,
         ): MutationResponse!
     }
