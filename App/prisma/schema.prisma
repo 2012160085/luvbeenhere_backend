@@ -41,6 +41,8 @@ model Visit {
   placeId   Int?
   photos    Photo[]
   rating    Rating?
+  posX      Float
+  posY      Float
 }
 
 model Place {

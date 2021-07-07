@@ -8,10 +8,11 @@ AWS.config.update({
 });
 
 export const uploadPhoto = (async (file, userId) => {
+    console.log("Call uploadPhoto");
     const { filename, createReadStream } = await file;
     const readStream = createReadStream();
     const objectName = `${userId}-${Date.now()}-${filename}`;
-    await new AWS.S3()
+    const upload = new AWS.S3()
         .upload({
             Body: readStream,
             Bucket: "luvbeenhere-images",
@@ -19,13 +20,8 @@ export const uploadPhoto = (async (file, userId) => {
             ACL: "public-read",
         })
         .promise()
-        .then(
-            function (data) {
-                console.log(data)
-            },
-            function (err) {
-                console.log(err)
-            }
-        )
-    return "";
+    console.log("Return uploadPhoto");
+
+    
+    return upload;
 });
