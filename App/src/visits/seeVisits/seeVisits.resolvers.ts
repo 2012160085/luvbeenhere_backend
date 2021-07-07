@@ -2,18 +2,21 @@ import { Resolvers } from "../../types";
 
 const resolvers: Resolvers = {
     Query: {
-        seeDates: async (_, { xRngFrom, xRngTo, yRngFrom, yRngTo, }, { client }) => {
-
-            await client.visit.findMany({
+        seeVisits: async (_, { xRngFrom, xRngTo, yRngFrom, yRngTo, }, { client }) => {
+            return client.visit.findMany({
                 where: {
-                    photos : {
-                        
+                    AND: {
+                        posX:{
+                            gte:xRngFrom,
+                            lte:xRngTo,
+                        },
+                        posY:{
+                            gte:yRngFrom,
+                            lte:yRngTo,
+                        }
                     }
                 }
             });
-            return {
-                ok: true
-            }
         }
     }
 }

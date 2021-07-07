@@ -4,7 +4,7 @@ import { Resolvers } from "../../types";
 import AWS from 'aws-sdk'
 const resolvers: Resolvers = {
     Mutation: {
-        createVisit: async (_, { name, dateId, placeId, files, rating }, { client }) => {
+        createVisit: async (_, { name, dateId, placeId, files, rating, posXs, posYs }, { client }) => {
             const date = await client.date.findUnique({ where: { id: dateId } })
             if (!date) {
                 return {
@@ -22,6 +22,8 @@ const resolvers: Resolvers = {
                     }
                 }
             }
+            const average = arr => arr.reduce( ( p, c ) => p + c, 0 ) / arr.length;
+
             const createdVisit = await client.visit.create({
                 data: {
                     name,
@@ -30,8 +32,8 @@ const resolvers: Resolvers = {
                             id: dateId
                         }
                     },
-                    posX: 37.3,
-                    posY: 127.32,
+                    posX: average(posXs),
+                    posY: average(posYs),
                     ...(placeId && {
                         place: {
                             connect: {
@@ -49,7 +51,7 @@ const resolvers: Resolvers = {
                 }
             });
             if (files) {
-                await createPhoto(files, 37.23, 127.33, new Date().toISOString(), createdVisit.id);
+                await createPhoto(files, posXs, posYs, new Date().toISOString(), createdVisit.id);
             }
             return {
                 ok: true
