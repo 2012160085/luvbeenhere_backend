@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-export default gql `
+export default gql`
     type Mutation{
         createVisit(
             name: String!,
@@ -10,6 +10,7 @@ export default gql `
             posXs: [Float]!
             posYs: [Float]!
             rating: Int,
+            comment: String!
         ): MutationResponse!
     }
 `

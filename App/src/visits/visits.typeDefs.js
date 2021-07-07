@@ -8,5 +8,8 @@ export default gql`
         place: Place
         photos: [Photo]
         rating: Rating
+        posX: Float
+        posY: Float
+        comment: String!
     }
 `

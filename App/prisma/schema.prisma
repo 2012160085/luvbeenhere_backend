@@ -43,6 +43,7 @@ model Visit {
   rating    Rating?
   posX      Float
   posY      Float
+  comment   String
 }
 
 model Place {
