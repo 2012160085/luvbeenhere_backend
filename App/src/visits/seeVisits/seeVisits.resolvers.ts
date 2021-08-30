@@ -15,6 +15,9 @@ const resolvers: Resolvers = {
                             lte:yRngTo,
                         }
                     }
+                },
+                include:{
+                    rating: true
                 }
             });
         }
