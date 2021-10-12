@@ -6,7 +6,7 @@ const resolvers: Resolvers = {
   Mutation: {
     createAccount: async (
       _,
-      { name, username, phone, password },
+      { username, name, phone, password, auth },
       { client }
     ) => {
       try {
@@ -23,7 +23,24 @@ const resolvers: Resolvers = {
           },
         });
         if (existingUser) {
-          throw new Error("This username is already taken");
+          return {
+            ok: false,
+            error: "10101"
+          }
+        }
+        const verification = await client.phoneVerification.findFirst({
+          where: {
+            phone
+          },
+          orderBy: {
+            createdAt: 'desc'
+          }
+        });
+        if (verification.token !== auth || !verification.verfied) {
+          return {
+            ok: false,
+            error: "10102"
+          }
         }
         const hashedPassword = await bcrypt.hash(password, 11);
         await client.user.create({
@@ -40,7 +57,7 @@ const resolvers: Resolvers = {
       } catch (e) {
         return {
           ok: false,
-          error: "Cant Create account",
+          error: "10103",
         };
       }
     },

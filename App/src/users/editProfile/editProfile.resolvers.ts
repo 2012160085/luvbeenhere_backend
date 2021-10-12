@@ -9,11 +9,11 @@ const resolvers: Resolvers = {
     Mutation: {
         editProfile: protectedResolver(
             async (
-                _, { name, username, phone, password, avatar }, { loggedInUser, client }
+                _, { name, phone, password, avatar, coupleId }, { loggedInUser, client }
             ) => {
                 let avatarUrl = null;
                 if (avatar) {
-                    uploadPhoto(avatar, loggedInUser.id);
+                    uploadPhoto(avatar);
                 }
 
                 let hashedPassword = null;
@@ -27,9 +27,16 @@ const resolvers: Resolvers = {
                     },
                     data: {
                         name,
-                        phone,
+                        ...(phone && {phone}),
                         ...(hashedPassword && { password: hashedPassword }),
                         ...(avatarUrl && { avatar: avatarUrl }),
+                        ...(coupleId && {
+                            couple: {
+                                connect: {
+                                    id: coupleId
+                                }
+                            }
+                        })
                     },
                 });
                 if (updatedUser.id) {
@@ -39,7 +46,7 @@ const resolvers: Resolvers = {
                 } else {
                     return {
                         ok: false,
-                        error: "Cloud not update profile",
+                        error: "10100",
                     };
                 }
             }

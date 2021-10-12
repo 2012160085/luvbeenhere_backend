@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Photo" ALTER COLUMN "datetime" DROP NOT NULL,
+ALTER COLUMN "comment" DROP NOT NULL;

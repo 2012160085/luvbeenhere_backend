@@ -11,29 +11,52 @@ generator client {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  username  String   @unique
-  phone     String   @unique
-  password  String
-  avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 Int                @id @default(autoincrement())
+  name               String
+  username           String             @unique
+  phone              String             @unique
+  password           String
+  avatar             String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  couple             Couple?            @relation(fields: [coupleId], references: [id])
+  coupleId           Int?
+  sendedInvitation   CoupleInvitation[] @relation(name: "sender")
+  receivedInvitation CoupleInvitation[] @relation(name: "receiver")
 }
 
-model Date {
+model Couple {
   id        Int      @id @default(autoincrement())
-  name      String
-  yyyymmdd  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  visits    Visit[]
+  user      User[]
+  date      MDate[]
+  name      String
+}
+
+model MDate {
+  id         Int          @id @default(autoincrement())
+  name       String
+  datetime   DateTime
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  visits     Visit[]
+  couple     Couple       @relation(fields: [coupleId], references: [id])
+  coupleId   Int
+  posX       Float?
+  posY       Float?
+  tag        Tag[]
+  weatherTag WeatherTag[]
+  price      Int?
+  isPublic   Boolean?     @default(false)
+
+  @@unique([datetime, coupleId])
 }
 
 model Visit {
   id        Int      @id @default(autoincrement())
   name      String
-  date      Date     @relation(fields: [dateId], references: [id])
+  date      MDate     @relation(fields: [dateId], references: [id])
   place     Place?   @relation(fields: [placeId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -41,9 +64,26 @@ model Visit {
   placeId   Int?
   photos    Photo[]
   rating    Rating?
-  posX      Float
-  posY      Float
-  comment   String
+  posX      Float?
+  posY      Float?
+  comment   String?
+  advantage String?
+  shortage  String?
+  price     Int?
+  datetime  DateTime
+  isPublic  Boolean? @default(false)
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  date MDate[]
+}
+
+model WeatherTag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  date MDate[]
 }
 
 model Place {
@@ -57,28 +97,50 @@ model Place {
 }
 
 model Photo {
-  id        Int      @id @default(autoincrement())
-  posX      Float
-  posY      Float
+  id        Int       @id @default(autoincrement())
+  posX      Float?
+  posY      Float?
   file      String
-  datetime  DateTime
-  visit     Visit    @relation(fields: [visitId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  datetime  DateTime?
+  visit     Visit     @relation(fields: [visitId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   visitId   Int
+  comment   String?
 }
 
 model Rating {
   id        Int      @id @default(autoincrement())
-  rating    Int
+  value     Int
   visit     Visit    @relation(fields: [visitId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  visitId   Int
+  visitId   Int      @unique
 }
 
 model Like {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CoupleInvitation {
+  id         Int      @id @default(autoincrement())
+  sender     User     @relation(fields: [senderId], references: [id], name: "sender")
+  receiver   User     @relation(fields: [receiverId], references: [id], name: "receiver")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  senderId   Int
+  receiverId Int
+
+  @@unique([senderId, receiverId])
+}
+
+model PhoneVerification {
+  id        Int      @id @default(autoincrement())
+  auth      String
+  phone     String
+  verfied   Boolean  @default(false)
+  token     String
+  createdAt DateTime @default(now())
 }

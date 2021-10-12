@@ -1,5 +1,5 @@
 import AWS from "aws-sdk";
-
+import cryptoRandomString from 'crypto-random-string';
 AWS.config.update({
     credentials: {
         accessKeyId: process.env.AWS_KEY,
@@ -7,11 +7,13 @@ AWS.config.update({
     },
 });
 
-export const uploadPhoto = (async (file, userId) => {
+export const uploadPhoto = (async (file) => {
     console.log("Call uploadPhoto");
     const { filename, createReadStream } = await file;
+    const fileExtension = filename.split('.').pop();
     const readStream = createReadStream();
-    const objectName = `${userId}-${Date.now()}-${filename}`;
+    const randString = cryptoRandomString(64);
+    const objectName = `${randString}.${fileExtension}`;
     const upload = new AWS.S3()
         .upload({
             Body: readStream,
@@ -25,3 +27,11 @@ export const uploadPhoto = (async (file, userId) => {
     
     return upload;
 });
+
+export const date2StrDay = (timeString) => {
+    return new Date(timeString).toISOString().slice(0, 10);
+}
+
+export const minmaxDateInArr = (arr) => [Math.min(...arr), Math.max(...arr)];
+
+export const averageInArr = arr => arr.reduce((p, c) => p + c, 0) / arr.length;

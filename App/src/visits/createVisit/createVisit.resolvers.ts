@@ -1,63 +1,107 @@
-import { createPhoto } from "../../photos/createPhoto/createPhoto";
-import { uploadPhoto } from "../../shared/shared.utils";
+import { averageInArr, date2StrDay, minmaxDateInArr, uploadPhoto } from "../../shared/shared.utils";
 import { Resolvers } from "../../types";
 import AWS from 'aws-sdk'
+import { protectedResolver } from "../../users/users.utils";
 const resolvers: Resolvers = {
     Mutation: {
-        createVisit: async (_, { name, dateId, placeId, files, rating, posXs, posYs, comment }, { client }) => {
-            const date = await client.date.findUnique({ where: { id: dateId } })
-            if (!date) {
-                return {
-                    ok: false,
-                    error: 'date does not exists',
-                }
-            }
+        createVisit: protectedResolver
+            (async (_, {
+                name,
+                placeId,
+                photoPosts,
+                rating,
+                comment,
+                datetime,
+                advantage,
+                shortage,
+                price,
+                isPublic
+            }, { client, loggedInUser }) => {
 
-            if (placeId) {
-                const place = await client.place.findUnique({ where: { id: placeId } })
-                if (!place) {
-                    return {
-                        ok: false,
-                        error: 'place does not exists',
+                //사진 업로드
+                const uploadPromises = photoPosts.map(pp => uploadPhoto(pp.file))
+                const photoUrls = (await Promise.all(uploadPromises)).map(upload => [upload["Location"]])
+
+                const photoInfo = photoPosts.map((pp, index) => {
+                    pp['file'] = photoUrls[index][0]
+                    pp['datetime'] = new Date(pp['datetime'])
+
+                    return { ...pp }
+                })
+
+                const minmaxDate = minmaxDateInArr(
+                    photoInfo.map(pi => pi['datetime'])
+                )
+
+                const strDateDay = date2StrDay(minmaxDate[0])
+                const avgPosX = averageInArr(photoInfo.map(pi => pi['posX']))
+                const avgPosY = averageInArr(photoInfo.map(pi => pi['posY']))
+                console.log(strDateDay);
+                //데이트 없으면 생성
+                var date = await client.mDate.findUnique({
+                    where: {
+                        datetime_coupleId: {
+                            datetime: new Date(strDateDay).toISOString(),
+                            coupleId: loggedInUser.coupleId
+                        }
                     }
+                })
+                if (!date) {
+                    date = await client.mDate.create({
+                        data: {
+                            datetime: new Date(strDateDay).toISOString(),
+                            name: `${strDateDay} 데이트`,
+                            couple: {
+                                connect: {
+                                    id: loggedInUser.coupleId
+                                }
+                            }
+                        }
+                    })
                 }
-            }
-            const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
 
-            const createdVisit = await client.visit.create({
-                data: {
-                    name,
-                    date: {
-                        connect: {
-                            id: dateId
-                        }
-                    },
-                    posX: average(posXs),
-                    posY: average(posYs),
-                    ...(placeId && {
-                        place: {
+
+
+                //방문 생성
+                await client.visit.create({
+                    data: {
+                        name,
+                        date: {
                             connect: {
-                                id: placeId,
+                                id: date.id
                             }
-                        }
-                    }),
-                    ...(rating && {
-                        rating: {
-                            create: {
-                                rating,
+                        },
+                        photos: {
+                            createMany: {
+                                data: photoInfo
                             }
-                        }
-                    }),
-                    comment,
+                        },
+                        datetime: new Date(strDateDay).toISOString(),
+                        advantage,
+                        comment,
+                        isPublic,
+                        ...(rating && {
+                            rating: {
+                                create: {
+                                    value: rating,
+                                }
+                            }
+                        }),
+                        posX: avgPosX,
+                        posY: avgPosY,
+                        price,
+                        shortage, 
+                    }
+                })
+
+
+
+
+
+                return {
+                    ok: true
                 }
-            });
-            if (files) {
-                await createPhoto(files, posXs, posYs, new Date().toISOString(), createdVisit.id);
-            }
-            return {
-                ok: true
-            }
-        }
+            })
     }
 }
 

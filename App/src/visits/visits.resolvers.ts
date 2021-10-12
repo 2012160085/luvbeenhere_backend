@@ -13,7 +13,7 @@ const resolvers: Resolvers = {
             })
         },
         date: async ({ id }) => {
-            return client.date.findFirst({
+            return client.mDate.findFirst({
                 where: {
                     visits: {
                         some: {

@@ -45,4 +45,18 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+
+        }
+        success{
+
+        }
+        failure {
+
+        }
+        cleanup{
+            deleteDir()
+        }
+}
 }

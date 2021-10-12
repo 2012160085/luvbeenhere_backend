@@ -3,14 +3,16 @@ import { gql } from "apollo-server-express";
 export default gql`
     type Mutation{
         createVisit(
-            name: String!,
-            dateId: Int!,
-            placeId: Int,
-            files: [Upload]!
-            posXs: [Float]!
-            posYs: [Float]!
-            rating: Int,
-            comment: String!
+            name      :String!
+            placeId   :Int
+            photoPosts    :[PhotoPost]!
+            rating    :Int
+            comment   :String
+            advantage :String
+            shortage  :String
+            price     :Int
+            isPublic  :Boolean
+            datetime  :String
         ): MutationResponse!
     }
-`
+`;

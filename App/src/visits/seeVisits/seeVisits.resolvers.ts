@@ -3,7 +3,9 @@ import { Resolvers } from "../../types";
 const resolvers: Resolvers = {
     Query: {
         seeVisits: async (_, { xRngFrom, xRngTo, yRngFrom, yRngTo, }, { client }) => {
-            return client.visit.findMany({
+            console.log(xRngTo);
+            
+            const visits = await client.visit.findMany({
                 where: {
                     AND: {
                         posX:{
@@ -20,6 +22,9 @@ const resolvers: Resolvers = {
                     rating: true
                 }
             });
+            console.log(visits);
+            
+            return visits
         }
     }
 }
