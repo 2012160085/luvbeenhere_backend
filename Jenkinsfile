@@ -14,6 +14,7 @@ pipeline {
                     sh 'mkdir -p ~/.docker'
                     sh """echo ${DOCKER_CRED_BASE64} | base64 -d > ~/.docker/config.json"""
                     sh """echo ${DOTENV} | base64 -d > App/.env"""
+                    sh """cat App/.env"""
                     sh """docker build --tag bieberlee/luvbeenhere_backend:latest .""" 
                     sh """docker push bieberlee/luvbeenhere_backend:latest"""
                 }
