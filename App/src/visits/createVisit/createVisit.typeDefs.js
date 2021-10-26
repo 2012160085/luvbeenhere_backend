@@ -18,6 +18,6 @@ export default gql`
       price: Int
       isPublic: Boolean
       datetime: String
-    ): MutationResponse!
+    ): CreateVisitResponse!
   }
 `;
