@@ -12,6 +12,7 @@ export default gql`
     tag: [Tag]
     weatherTag: [WeatherTag]
     price: Int
+    isMine: Boolean
   }
 
   type Tag {
