@@ -105,6 +105,7 @@ const resolvers: Resolvers = {
         return {
           ok: true,
           visitId: createdVisit.id,
+          dateId: createdVisit.dateId,
         };
       }
     ),

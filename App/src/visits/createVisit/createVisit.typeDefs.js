@@ -5,6 +5,7 @@ export default gql`
     ok: Boolean!
     error: String
     visitId: Int
+    dateId: Int
   }
   type Mutation {
     createVisit(
