@@ -7,6 +7,7 @@ import {
 import { Resolvers } from "../../types";
 import AWS from "aws-sdk";
 import { protectedResolver } from "../../users/users.utils";
+import { reverseGeocoding } from "../../shared/reverseGeocoding";
 const resolvers: Resolvers = {
   Mutation: {
     createVisit: protectedResolver(
@@ -71,6 +72,8 @@ const resolvers: Resolvers = {
         }
 
         //방문 생성
+        const address = await reverseGeocoding(avgPosX, avgPosY);
+
         const createdVisit = await client.visit.create({
           data: {
             name,
@@ -99,6 +102,7 @@ const resolvers: Resolvers = {
             posY: avgPosY,
             price,
             shortage,
+            rgeocode: address,
           },
         });
 
