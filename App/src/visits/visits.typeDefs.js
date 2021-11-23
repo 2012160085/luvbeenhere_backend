@@ -11,6 +11,7 @@ export default gql`
         posX: Float
         posY: Float
         comment: String!
+        rgeocode: String
     }
 
     input PhotoPost{
