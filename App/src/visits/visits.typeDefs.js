@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-export default gql`
+export default gql `
     type Visit{
         id: Int!
         name: String!
@@ -15,7 +15,7 @@ export default gql`
     }
 
     input PhotoPost{
-        file: Upload!
+        file: String!
         posX: Float
         posY: Float
         comment: String

@@ -27,17 +27,10 @@ const resolvers: Resolvers = {
         },
         { client, loggedInUser }
       ) => {
-        //사진 업로드
-        const uploadPromises = photoPosts.map((pp) => uploadPhoto(pp.file));
-        const photoUrls = (await Promise.all(uploadPromises)).map((upload) => [
-          upload["Location"],
-        ]);
 
-        const photoInfo = photoPosts.map((pp, index) => {
-          pp["file"] = photoUrls[index][0];
-          pp["datetime"] = new Date(pp["datetime"]);
-
-          return { ...pp };
+        const photoInfo = photoPosts.map((photoPost) => {
+          photoPost["datetime"] = new Date(photoPost["datetime"]);
+          return { ...photoPost };
         });
 
         const minmaxDate = minmaxDateInArr(
