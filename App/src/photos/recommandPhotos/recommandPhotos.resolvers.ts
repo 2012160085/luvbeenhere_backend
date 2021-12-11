@@ -3,7 +3,6 @@ import { protectedResolver } from "../../users/users.utils";
 import axios from "axios";
 import FormData from "form-data";
 import zlib from "zlib";
-import stream from "stream"
 const resolvers: Resolvers = {
   Mutation: {
     recommandPhotos: protectedResolver(
@@ -20,11 +19,9 @@ const resolvers: Resolvers = {
         const filenames = [];
         const readStreams = await Promise.all(images);
 
-
-
         readStreams.map((e, i) => {
           filenames.push(e["filename"]);
-          formData.append(`file${i + 1}`, e['createReadStream']());
+          formData.append(`file${i + 1}`, e);
         });
         
         const formDataFnAdded = formData['_streams'].map( (stream,i) => {
@@ -40,9 +37,6 @@ const resolvers: Resolvers = {
         console.log('------------------------------formDataFnAdded------------------------------ ');
         console.log(formDataFnAdded);
         formData['_streams'] = formDataFnAdded
-        console.log('------------------------------formData------------------------------ ');
-        console.log(formData);
-        
         const resp = await axios.post(
             "https://bxsd7ugitl.execute-api.ap-northeast-2.amazonaws.com/default/photo-clustering",
             formData
