@@ -8,7 +8,6 @@ const resolvers: Resolvers = {
     clusterPhotos: protectedResolver(
       async (_, { images }, { loggedInUser, client }) => {
         const threadhold = 0.88;
-        const sliceLength = 4;
 
         if (!loggedInUser) {
           return {

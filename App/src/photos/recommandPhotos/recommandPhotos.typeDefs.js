@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql `
     type recommandPhotosResponse{
-        recommands: [String]
+        scores: [Float]
         error: String
         ok: Boolean!
     }
