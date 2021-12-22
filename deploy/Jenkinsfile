@@ -6,7 +6,7 @@ pipeline {
         REMOTE_PASSWD = credentials('lhb_be_dev_remote_passwd')
     }
     stages{
-        stage('Build BE Image'){
+        stage('Set Credentials'){
             steps {
                 script{
                     sh """echo ${DOTENV} | base64 -d > App/.env"""
@@ -14,7 +14,7 @@ pipeline {
                 }
             }
         }
-        stage('Run Container'){
+        stage('Build and Run Container'){
             steps{
                 script{
                     def remote = [:]
@@ -23,8 +23,14 @@ pipeline {
                     remote.user = REMOTE_USER
                     remote.password = REMOTE_PASSWD
                     remote.allowAnyHosts = true
+
+                    def docker_compose_file = sh(returnStdout: true, script: 'base64 -w0 deploy/docker-compose.yml').trim()
+
+                    
                     sshCommand remote: remote, command: """mkdir ${GIT_COMMIT}"""
+                    sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ${GIT_COMMIT}/docker-compose.yml"""
                     sshCommand remote: remote, command: """docker-compose up -f ${GIT_COMMIT}/docker-compose.yml -d"""
+                    sshCommand remote: remote, command: """rm -rf ${GIT_COMMIT}"""
                 }
             }
         }
