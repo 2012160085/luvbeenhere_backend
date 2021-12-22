@@ -2,6 +2,8 @@ pipeline {
     agent { label 'master'}
     environment {
         DOTENV = credentials('lhb_be_dev_dotenv')
+        REMOTE_USER = credentials('lhb_be_dev_remote_user')
+        REMOTE_PASSWD = credentials('lhb_be_dev_remote_passwd')
     }
     stages{
         stage('Build BE Image'){
@@ -9,9 +11,20 @@ pipeline {
                 script{
                     sh """echo ${DOTENV} | base64 -d > App/.env"""
                     sh """cat App/.env"""
-                    dir("deploy"){
-                        sh """docker-compose up --build"""
-                    }
+                }
+            }
+        }
+        stage('Run Container'){
+            steps{
+                script{
+                    def remote = [:]
+                    remote.name = 'localhost'
+                    remote.host = 'localhost'
+                    remote.user = REMOTE_USER
+                    remote.password = REMOTE_PASSWD
+                    remote.allowAnyHosts = true
+                    sshCommand remote: remote, command: """mkdir ${GIT_COMMIT}"""
+                    sshCommand remote: remote, command: """docker-compose up -f ${GIT_COMMIT}/docker-compose.yml -d"""
                 }
             }
         }
