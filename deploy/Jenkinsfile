@@ -29,8 +29,7 @@ pipeline {
                     
                     sshCommand remote: remote, command: """mkdir ${GIT_COMMIT}"""
                     sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ${GIT_COMMIT}/docker-compose.yml"""
-                    sshCommand remote: remote, command: """docker-compose up -f ${GIT_COMMIT}/docker-compose.yml -d"""
-                    sshCommand remote: remote, command: """rm -rf ${GIT_COMMIT}"""
+                    sshCommand remote: remote, command: """docker-compose up --build -f ${GIT_COMMIT}/docker-compose.yml -d"""
                 }
             }
         }
