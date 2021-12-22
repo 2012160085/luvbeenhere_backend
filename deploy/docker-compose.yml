@@ -1,7 +1,7 @@
 version: '3'
 services:
   lbh_be_dev:
-    build: .
+    image: bieberlee/luvbeenhere_backend:latest
     restart: always
     container_name: lbh_be_dev
     ports:

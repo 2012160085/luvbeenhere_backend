@@ -4,13 +4,18 @@ pipeline {
         DOTENV = credentials('lhb_be_dev_dotenv')
         REMOTE_USER = credentials('lhb_be_dev_remote_user')
         REMOTE_PASSWD = credentials('lhb_be_dev_remote_passwd')
+        DOCKER_CRED = credentials('dockerhub_credential')
     }
     stages{
-        stage('Set Credentials'){
+        stage('Build Image'){
             steps {
                 script{
+                    sh 'mkdir -p ~/.docker'
+                    sh """echo ${DOCKER_CRED} | base64 -d > ~/.docker/config.json"""
                     sh """echo ${DOTENV} | base64 -d > App/.env"""
                     sh """cat App/.env"""
+                    sh """docker build --tag bieberlee/luvbeenhere_backend:latest .""" 
+                    sh """docker push bieberlee/luvbeenhere_backend:latest"""
                 }
             }
         }
@@ -25,11 +30,9 @@ pipeline {
                     remote.allowAnyHosts = true
 
                     def docker_compose_file = sh(returnStdout: true, script: 'base64 -w0 deploy/docker-compose.yml').trim()
-                    def docker_file = sh(returnStdout: true, script: 'base64 -w0 deploy/Dockerfile').trim()
                     
                     sshCommand remote: remote, command: """mkdir ${GIT_COMMIT}"""
                     sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ${GIT_COMMIT}/docker-compose.yml"""
-                    sshCommand remote: remote, command: """echo ${docker_file} | base64 -d > ${GIT_COMMIT}/Dockerfile"""
                     sshCommand remote: remote, command: """docker-compose -f ${GIT_COMMIT}/docker-compose.yml up --build -d"""
                 }
             }
