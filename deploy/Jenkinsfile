@@ -25,11 +25,12 @@ pipeline {
                     remote.allowAnyHosts = true
 
                     def docker_compose_file = sh(returnStdout: true, script: 'base64 -w0 deploy/docker-compose.yml').trim()
-
+                    def docker_file = sh(returnStdout: true, script: 'base64 -w0 deploy/Dockerfile').trim()
                     
                     sshCommand remote: remote, command: """mkdir ${GIT_COMMIT}"""
                     sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ${GIT_COMMIT}/docker-compose.yml"""
-                    sshCommand remote: remote, command: """docker-compose up --build -f ${GIT_COMMIT}/docker-compose.yml -d"""
+                    sshCommand remote: remote, command: """echo ${docker_file} | base64 -d > ${GIT_COMMIT}/Dockerfile"""
+                    sshCommand remote: remote, command: """docker-compose -f ${GIT_COMMIT}/docker-compose.yml up --build -d"""
                 }
             }
         }
