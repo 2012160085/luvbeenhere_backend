@@ -1,0 +1,20 @@
+pipeline {
+    agent { label 'master'}
+    environment {
+        DOTENV = credentials('lhb_be_dev_dotenv')
+    }
+    stages{
+        stage('Build BE Image'){
+            steps {
+                script{
+                    sh """echo ${DOTENV} | base64 -d > App/.env"""
+                    sh """cat App/.env"""
+                    dir("deploy"){
+                        sh """docker-compose up --build"""
+                    }
+                }
+            }
+        }
+    }
+    post { cleanup { cleanWs() } }
+}
