@@ -14,27 +14,8 @@ pipeline {
                     sh """echo ${DOCKER_CRED} | base64 -d > ~/.docker/config.json"""
                     sh """echo ${DOTENV} | base64 -d > App/.env"""
                     sh """cat App/.env"""
-                    dir("deploy"){
-                        sh """docker-compose up --build -d"""
-                    }
-                }
-            }
-        }
-        stage('Build and Run Container'){
-            steps{
-                script{
-                    def remote = [:]
-                    remote.name = 'localhost'
-                    remote.host = 'localhost'
-                    remote.user = REMOTE_USER
-                    remote.password = REMOTE_PASSWD
-                    remote.allowAnyHosts = true
-
-                    def docker_compose_file = sh(returnStdout: true, script: 'base64 -w0 deploy/docker-compose.yml').trim()
+                    sh """docker-compose -f deploy/docker-compose.yml up --build -d"""
                     
-                    sshCommand remote: remote, command: """mkdir ${GIT_COMMIT}"""
-                    sshCommand remote: remote, command: """echo ${docker_compose_file} | base64 -d > ${GIT_COMMIT}/docker-compose.yml"""
-                    sshCommand remote: remote, command: """docker-compose -f ${GIT_COMMIT}/docker-compose.yml up --build -d"""
                 }
             }
         }
