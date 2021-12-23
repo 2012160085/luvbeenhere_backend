@@ -14,7 +14,7 @@ pipeline {
                     sh """echo ${DOCKER_CRED} | base64 -d > ~/.docker/config.json"""
                     sh """echo ${DOTENV} | base64 -d > App/.env"""
                     sh """cat App/.env"""
-                    sh """docker-compose -f deploy/docker-compose.yml up --build -d"""
+                    sh """docker-compose up --build -d"""
                     
                 }
             }
