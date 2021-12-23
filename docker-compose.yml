@@ -1,7 +1,7 @@
 version: '3'
 services:
   svc-lbh-dev-be-nodeserver:
-    build: .
+    image: img-lbh-dev-be-nodeserver
     restart: always
     container_name: ctn-lbh-dev-be-nodeserver
     ports:
