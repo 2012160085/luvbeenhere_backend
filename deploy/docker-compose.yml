@@ -1,9 +1,9 @@
 version: '3'
 services:
-  lbh_be_dev:
+  svc-lbh-dev-be-nodeserver:
     build: .
     restart: always
-    container_name: lbh_be_dev
+    container_name: ctn-lbh-dev-be-nodeserver
     ports:
       - "5446:4000"
 networks:
