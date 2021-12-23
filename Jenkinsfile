@@ -14,7 +14,7 @@ pipeline {
                     sh """echo ${DOCKER_CRED} | base64 -d > ~/.docker/config.json"""
                     sh """echo ${DOTENV} | base64 -d > App/.env"""
                     sh """cat App/.env"""
-                    sh """docker build --tag 'lbh-dev-be-nodeserver' ."""
+                    sh """docker build --tag 'img-lbh-dev-be-nodeserver' ."""
                     sh """docker-compose up --build -d"""
                 }
             }
