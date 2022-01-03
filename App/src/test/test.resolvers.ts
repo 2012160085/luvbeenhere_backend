@@ -21,7 +21,7 @@ const resolvers: Resolvers = {
           .promise()
       );
       console.log("test");
-      const result = await Promise.all(uploadPromises);
+      const result = await uploadPromises[0];
       console.log(result);
       return "success";
     },
