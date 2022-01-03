@@ -7,7 +7,9 @@ AWS.config.credentials = s3Cred;
 const resolvers: Resolvers = {
   Mutation: {
     test: async (_, { uploads }, { loggedInUser, client }) => {
+        console.log("test")
       const files = await Promise.all(uploads);
+      console.log("file done")
       const uploadPromises = files.map((file) =>
         new AWS.S3()
           .upload({
@@ -18,7 +20,7 @@ const resolvers: Resolvers = {
           })
           .promise()
       );
-
+      console.log("promise done")
       const result = await Promise.all(uploadPromises);
       console.log(result);
       return "success";
