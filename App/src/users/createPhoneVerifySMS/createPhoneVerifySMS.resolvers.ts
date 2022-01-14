@@ -11,13 +11,16 @@ const resolvers: Resolvers = {
       _,
       { phone }
     ) => {
-      const mock = true;
+
+      const mock = false;
 
       const existingUser = await client.user.findUnique({
         where: {
           phone
         }
       })
+      console.log(existingUser);
+      
       if (existingUser) {
         return {
           ok: false,
