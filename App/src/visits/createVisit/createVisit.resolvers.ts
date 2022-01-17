@@ -27,21 +27,23 @@ const resolvers: Resolvers = {
         },
         { client, loggedInUser }
       ) => {
-
+        console.log(111);
+        
         const photoInfo = photoPosts.map((photoPost) => {
           photoPost["datetime"] = new Date(photoPost["datetime"]);
           return { ...photoPost };
         });
-
+        console.log(222);
         const minmaxDate = minmaxDateInArr(
           photoInfo.map((pi) => pi["datetime"])
         );
-
+        console.log(333);
         const strDateDay = date2StrDay(minmaxDate[0]);
         const avgPosX = averageInArr(photoInfo.map((pi) => pi["posX"]));
         const avgPosY = averageInArr(photoInfo.map((pi) => pi["posY"]));
         console.log(strDateDay);
         //데이트 없으면 생성
+        console.log(444);
         var date = await client.mDate.findUnique({
           where: {
             datetime_coupleId: {
@@ -50,6 +52,7 @@ const resolvers: Resolvers = {
             },
           },
         });
+        console.log(555);
         if (!date) {
           date = await client.mDate.create({
             data: {
@@ -63,13 +66,13 @@ const resolvers: Resolvers = {
             },
           });
         }
-
+        console.log(666);
         //방문 생성
         const address = await reverseGeocoding(avgPosX, avgPosY);
-
+        console.log(777);
         const createdVisit = await client.visit.create({
           data: {
-            name,
+            name: name ? name : `${address} 방문`,
             date: {
               connect: {
                 id: date.id,
@@ -98,7 +101,7 @@ const resolvers: Resolvers = {
             rgeocode: address,
           },
         });
-
+        console.log(888);
         return {
           ok: true,
           visitId: createdVisit.id,

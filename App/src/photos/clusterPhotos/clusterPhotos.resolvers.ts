@@ -37,6 +37,8 @@ const resolvers: Resolvers = {
           return stream;
         });
         formData["_streams"] = formDataFnAdded;
+        console.log("DDD");
+        
         const resp = await axios.post(
           "https://bxsd7ugitl.execute-api.ap-northeast-2.amazonaws.com/default/photo-clustering",
           formData,

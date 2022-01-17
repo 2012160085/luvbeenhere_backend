@@ -11,7 +11,8 @@ const resolvers: Resolvers = {
                     }
                 }
                 const uploaded = await uploadPhoto(upload);
-
+                console.log("PHOTO UPLOAD RETURN!!!");
+                
                 return {
                     ok: true,
                     file: uploaded["Location"]
