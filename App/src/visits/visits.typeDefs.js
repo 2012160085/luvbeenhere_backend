@@ -12,6 +12,7 @@ export default gql `
         posY: Float
         comment: String!
         rgeocode: String
+        likeCount: Int!
     }
 
     input PhotoPost{

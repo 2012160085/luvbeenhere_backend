@@ -22,6 +22,13 @@ const resolvers: Resolvers = {
                     }
                 }
             })
+        },
+        likeCount: async ({ id }) => {
+            return client.like.count({
+                where: {
+                    visitId: id
+                }
+            })
         }
     }
 }

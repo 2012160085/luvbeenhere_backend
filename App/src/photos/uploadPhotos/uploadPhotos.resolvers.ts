@@ -32,6 +32,8 @@ const resolvers: Resolvers = {
                         filenames
                     }
                 } catch (err) {
+                    console.log(err);
+                    
                     return {
                         ok: false
                     }

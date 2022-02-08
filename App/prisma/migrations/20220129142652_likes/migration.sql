@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Like" ADD COLUMN     "visitId" INTEGER;
+
+-- AddForeignKey
+ALTER TABLE "Like" ADD FOREIGN KEY ("visitId") REFERENCES "Visit"("id") ON DELETE SET NULL ON UPDATE CASCADE;

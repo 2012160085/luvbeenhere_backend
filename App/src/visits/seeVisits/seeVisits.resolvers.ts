@@ -1,31 +1,38 @@
 import { Resolvers } from "../../types";
+import { protectedResolver } from "../../users/users.utils";
 
 const resolvers: Resolvers = {
     Query: {
-        seeVisits: async (_, { xRngFrom, xRngTo, yRngFrom, yRngTo, }, { client }) => {
-            console.log(xRngTo);
-            
-            const visits = await client.visit.findMany({
-                where: {
-                    AND: {
-                        posX:{
-                            gte:xRngFrom,
-                            lte:xRngTo,
-                        },
-                        posY:{
-                            gte:yRngFrom,
-                            lte:yRngTo,
-                        }
-                    }
-                },
-                include:{
-                    rating: true
+        seeVisits: protectedResolver(
+            async (_, { xRngFrom, xRngTo, yRngFrom, yRngTo, }, { client ,loggedInUser}) => {
+                if (!loggedInUser){
+                    return []
                 }
-            });
-            console.log(visits);
-            
-            return visits
-        }
+                const visits = await client.visit.findMany({
+                    where: {
+                        AND: {
+                            posX: {
+                                gte: xRngFrom,
+                                lte: xRngTo,
+                            },
+                            posY: {
+                                gte: yRngFrom,
+                                lte: yRngTo,
+                            },
+                            date:{
+                                coupleId: loggedInUser.coupleId
+                            }
+                        }
+                    },
+                    include: {
+                        rating: true
+                    }
+                });
+
+
+                return visits
+            }
+        )
     }
 }
 
