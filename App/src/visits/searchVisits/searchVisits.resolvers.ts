@@ -72,7 +72,7 @@ const resolvers: Resolvers = {
             console.log(JSON.stringify(searchBody));
 
             const result = await axios.post(
-                "http://localhost:9200/test5-2022.02.08/_search",
+                "http://localhost:9200/test5-2022.02.13/_search",
                 JSON.stringify(searchBody),
                 {
                     headers: {
