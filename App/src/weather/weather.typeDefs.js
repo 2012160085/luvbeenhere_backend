@@ -16,7 +16,6 @@ export default gql`
         windSpeed10h: Float
         humidity: Int
         pressure: Float
-        observedAt: DateTime!
+        observedAt: String!
     }
-    
 `

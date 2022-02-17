@@ -15,7 +15,7 @@ export default gql`
         windSpeed10h: Float
         humidity: Int
         pressure: Float
-        observedAt: DateTime!
+        observedAt: String!
     }
     type Mutation{
         createWeather(weatherInputs: [WeatherInput]!, token: String!): MutationResponse!
