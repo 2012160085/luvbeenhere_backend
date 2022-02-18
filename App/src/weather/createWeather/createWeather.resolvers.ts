@@ -10,7 +10,7 @@ const resolvers: Resolvers = {
                         ok: false
                     }
                 }
-                await client.weather.createMany({
+                await client.weather.createMany ({
                     data: weatherInputs
                 })
                 return {

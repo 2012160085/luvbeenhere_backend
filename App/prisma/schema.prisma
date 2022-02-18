@@ -183,4 +183,7 @@ model Weather {
   pressure         Float?
   observedAt       DateTime
   createdAt        DateTime       @default(now())
+
+  @@unique([weatherStationId, observedAt])
+  @@index([observedAt])
 }
