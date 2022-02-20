@@ -36,6 +36,7 @@ const app = express();
 
 app.use(logger("common"))
 app.use(graphqlUploadExpress());
+app.use(express.json({limit: '200mb'}))
 apollo.applyMiddleware({ app });
 app.use("/static", express.static("uploads"));
 
