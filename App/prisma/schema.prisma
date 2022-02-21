@@ -75,6 +75,8 @@ model Visit {
   isPublic  Boolean? @default(false)
   rgeocode  String?
   likes     Like[]
+  weather   Weather? @relation(fields: [weatherId], references: [id])
+  weatherId Int?
 }
 
 model Tag {
@@ -186,4 +188,5 @@ model Weather {
 
   @@unique([weatherStationId, observedAt])
   @@index([observedAt])
+  Visit Visit[]
 }
