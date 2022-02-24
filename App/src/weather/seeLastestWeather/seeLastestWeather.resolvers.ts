@@ -11,9 +11,7 @@ const resolvers: Resolvers = {
                         error: 'token is not correct'
                     }
                 }
-                const result = await client.$queryRaw(
-                    'select max("observedAt") as latest from "Weather" w'
-                )
+                const result = await client.$queryRaw`select max("observedAt") as latest from "Weather" w`
                 const {latest} = result[0]   
                 return {
                     ok: true,
