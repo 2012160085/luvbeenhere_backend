@@ -14,7 +14,7 @@ export type weatherBrief = {
     exists: Boolean;
 };
 
-const getTemperature = (temp) => {
+export const getTemperature = (temp) => {
     if (temp >= 30) {
         return 'burnning'
     } else if (temp >= 24) {
@@ -74,10 +74,10 @@ export const seeWeather: seeWeather = async (lat, lng, observedAt) => {
     const nearestWeather = weatherWithDist.sort((a, b) => a.dist - b.dist)[0]
 
     return {
-        rainy: nearestWeather.prcpt3h && nearestWeather.prcpt3h > 1 && nearestWeather.temp > 2,
-        snowy: nearestWeather.prcpt3h && nearestWeather.prcpt3h > 1 && nearestWeather.temp <= 4,
+        rainy: nearestWeather.prcpt3h !== null && nearestWeather.prcpt3h > 1 && nearestWeather.temp > 2,
+        snowy: nearestWeather.prcpt3h !== null && nearestWeather.prcpt3h > 1 && nearestWeather.temp <= 4,
         temperature: getTemperature(nearestWeather.temp),
-        windy: nearestWeather.windSpeed1h && nearestWeather.windSpeed1h > 5.5,
+        windy: nearestWeather.windSpeed1h !== null && nearestWeather.windSpeed1h > 5.5,
         raw: nearestWeather,
         exists: true
     }

@@ -28,8 +28,16 @@ export const uploadPhoto = (async (file) => {
     return upload;
 });
 
-export const date2StrDay = (timeString) => {
-    return new Date(timeString).toISOString().slice(0, 10);
+export const date2StrDay = (timeString: string | number | Date, measure: "day" | "hour" | "all" | "month" | "year") => {
+    var isoString = new Date(timeString).toISOString();
+    if(measure==="all"){
+        return isoString
+    }else if(measure==="day"){
+        return isoString.slice(0,10) + 'T00:00:00.000Z'
+    }else if(measure==="hour"){
+        return isoString.slice(0,13) + ':00:00.000Z'
+    }
+    return isoString
 }
 
 export const minmaxDateInArr = (arr) => [Math.min(...arr), Math.max(...arr)];

@@ -8,6 +8,7 @@ const resolvers: Resolvers = {
                 if (!loggedInUser){
                     return []
                 }
+                
                 const visits = await client.visit.findMany({
                     where: {
                         AND: {
@@ -25,10 +26,10 @@ const resolvers: Resolvers = {
                         }
                     },
                     include: {
-                        rating: true
+                        rating: true,
+                        weather: true
                     }
                 });
-
 
                 return visits
             }

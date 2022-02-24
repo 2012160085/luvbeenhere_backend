@@ -7,7 +7,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedIndexes"]
 }
 
 model User {
@@ -77,6 +78,15 @@ model Visit {
   likes     Like[]
   weather   Weather? @relation(fields: [weatherId], references: [id])
   weatherId Int?
+  area0     String?
+  area1     String?
+  area2     String?
+  area3     String?
+  area4     String?
+
+
+  @@index([posX, posY])
+  @@index([area1, area2], type: Hash)
 }
 
 model Tag {
@@ -186,7 +196,7 @@ model Weather {
   observedAt       DateTime
   createdAt        DateTime       @default(now())
 
+  Visit Visit[]
   @@unique([weatherStationId, observedAt])
   @@index([observedAt])
-  Visit Visit[]
 }

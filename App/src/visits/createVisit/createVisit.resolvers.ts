@@ -7,8 +7,8 @@ import {
 import { Resolvers } from "../../types";
 import AWS from "aws-sdk";
 import { protectedResolver } from "../../users/users.utils";
-import { reverseGeocoding } from "../../shared/reverseGeocoding";
 import { seeWeather } from "../../weather/seeWeather/seeWeather";
+import { reverseGeocodeDataToString, reverseGeocoding } from "../../shared/reverseGeocoding";
 const resolvers: Resolvers = {
   Mutation: {
     createVisit: protectedResolver(
@@ -37,8 +37,9 @@ const resolvers: Resolvers = {
         const minmaxDate = minmaxDateInArr(
           photoInfo.map((pi) => pi["datetime"])
         );
+        console.log(minmaxDate);
 
-        const strDateDay = date2StrDay(minmaxDate[0]);
+        const strDateDay = date2StrDay(minmaxDate[0], "day");
         const avgPosX = averageInArr(photoInfo.map((pi) => pi["posX"]));
         const avgPosY = averageInArr(photoInfo.map((pi) => pi["posY"]));
         console.log(strDateDay);
@@ -68,7 +69,7 @@ const resolvers: Resolvers = {
         }
 
         //방문 생성
-        const address = await reverseGeocoding(avgPosX, avgPosY);
+        const address = reverseGeocodeDataToString((await reverseGeocoding(avgPosX, avgPosY)).data) ;
 
         const createdVisit = await client.visit.create({
           data: {
@@ -83,7 +84,7 @@ const resolvers: Resolvers = {
                 data: photoInfo,
               },
             },
-            datetime: new Date(strDateDay).toISOString(),
+            datetime: date2StrDay(minmaxDate[0], "hour"),
             advantage,
             comment,
             isPublic,
@@ -101,13 +102,13 @@ const resolvers: Resolvers = {
             rgeocode: address,
           },
         });
-        const weather = await seeWeather(avgPosX, avgPosY, new Date(strDateDay).toISOString());
+        const weather = await seeWeather(avgPosX, avgPosY, date2StrDay(minmaxDate[0], "hour"));
         if (weather.exists) {
           await client.visit.update({
             where: {
               id: createdVisit.id
             },
-            data:{
+            data: {
               weatherId: weather.raw.id
             }
           })

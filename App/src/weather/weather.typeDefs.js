@@ -17,5 +17,12 @@ export default gql`
         humidity: Int
         pressure: Float
         observedAt: String!
+        brief: WeatherBrief!
+    }
+    type WeatherBrief{
+        rainy: Boolean!
+        snowy: Boolean!
+        temperature: String!
+        windy: Boolean!
     }
 `

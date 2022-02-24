@@ -13,6 +13,7 @@ export default gql `
         comment: String!
         rgeocode: String
         likeCount: Int!
+        weather: Weather
     }
 
     input PhotoPost{
