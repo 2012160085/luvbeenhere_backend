@@ -28,10 +28,12 @@ export const reverseGeocoding: reverseGeocoding = async (lat, lng) => {
           sourcecrs: "epsg:4326",
           output: "json",
           request: "coordsToaddr",
-          orders: "addr",
+          orders: "addr,roadaddr",
         },
       }
     );
+    console.log(JSON.stringify(resp.data));
+    
     if (resp.status == 200) {
       return {
         data: {
@@ -58,7 +60,7 @@ export const reverseGeocoding: reverseGeocoding = async (lat, lng) => {
 
 
 };
-export const reverseGeocodeDataToString: reverseGeocodeDataToString = (rgeoCodeData: reverseGeocodeData ) => {
+export const reverseGeocodeDataToString: reverseGeocodeDataToString = (rgeoCodeData: reverseGeocodeData) => {
   if (rgeoCodeData.area0 !== "kr") {
     return '외국'
   } else {
@@ -72,19 +74,19 @@ export const reverseGeocodeDataToString: reverseGeocodeDataToString = (rgeoCodeD
       경상북도: '경북',
       경상남도: '경남'
     }
-    
+
     var a1Text = ''
     if (area1.endsWith("특별시")) {
       a1Text = area1.slice(0, a1Text.length - 3)
     } else if (area1.endsWith("광역시")) {
       a1Text = area1.slice(0, a1Text.length - 3)
     } else if (area1.endsWith("특별자치도")) {
-      a1Text = area1.slice(0, a1Text.length - 5)
+      a1Text = area1.slice(0, a1Text.length - 5) + '도'
     } else if (area1.endsWith("특별자치시")) {
-      a1Text = area1.slice(0, a1Text.length - 5)
+      a1Text = area1.slice(0, a1Text.length - 5) + '시'
     } else {
       a1Text = doeMapping[`${area1}`]
     }
   }
-  return `${a1Text} ${rgeoCodeData.area2} ${rgeoCodeData.area3}`
+  return `${a1Text}${rgeoCodeData.area2 ? (' '+rgeoCodeData.area2) : ''}${rgeoCodeData.area3 ? (' '+rgeoCodeData.area3) : ''}${rgeoCodeData.area4 ? (' '+rgeoCodeData.area4) : ''}`
 }
