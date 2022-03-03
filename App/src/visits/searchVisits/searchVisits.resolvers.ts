@@ -1,79 +1,18 @@
 import axios from "axios";
 import { Resolvers } from "../../types";
+import { buildFilterQuery } from "./querys/esQuery";
 
-const priorityTypes = ['closest', 'popular', 'latest']
+type priorityTypes = 'closest' | 'popular' | 'latest'
+
 const resolvers: Resolvers = {
     Query: {
-        searchVisits: async (_, { query, location, locationScale, priority }, { client }) => {
-            if (priority) {
-                if (!(priority in priorityTypes)) {
-                    return {
-                        ok: false,
-                        error: "priority must be one of: 'closest', 'popular', 'latest'"
-                    }
-                }
-            }
-            const searchBody = {
-                "query": {
-                    "function_score": {
-                        "query": query ? {
-                            "bool": {
-                                "should": [
-                                    {
-                                        "match": {
-                                            "comment": query
-                                        }
-                                    },
-                                    {
-                                        "match": {
-                                            "visitname": query
-                                        }
-                                    }
-                                ]
-                            }
-                        } : {
-                            "match_all": {}
-                        },
-                        "functions": [
-
-                        ],
-                        "score_mode": "multiply",
-                        "boost_mode": "multiply",
-                        "min_score": 0.5
-                    }
-                }
-            }
-            const likesParam = {
-                "field_value_factor": {
-                    "field": "likes",
-                    "factor": 1.2,
-                    "modifier": "ln2p",
-                    "missing": 0
-                },
-                "weight": 0.3
-            }
-            if (location) {
-                const locationParam = {
-                    "linear": {
-                        "location": {
-                            "origin": location,
-                            "scale": `${locationScale * 2}km`,
-                            "offset": `${locationScale}m`,
-                            "decay": 0.5
-                        }
-                    },
-                    "weight": 1
-                }
-                searchBody.query.function_score.functions.push(
-                    locationParam, likesParam
-                )
-            }
-
-            console.log(JSON.stringify(searchBody));
+        searchVisits: async (_, { query, weather, area1, area2, sorting }, { client }) => {
+            const fq = buildFilterQuery(weather, area1, area2, query, sorting);
+            console.log(JSON.stringify(fq));
 
             const result = await axios.post(
                 "http://localhost:9200/test7-2022.02.24/_search",
-                JSON.stringify(searchBody),
+                JSON.stringify(fq),
                 {
                     headers: {
                         'Content-Type': 'application/json'
@@ -99,6 +38,9 @@ const resolvers: Resolvers = {
                     id: {
                         in: visitIds
                     }
+                },
+                include: {
+                    weather: true
                 }
             })
 

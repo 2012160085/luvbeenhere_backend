@@ -14,6 +14,11 @@ export default gql `
         rgeocode: String
         likeCount: Int!
         weather: Weather
+        datetime: String!
+        area1: String
+        area2: String
+        area3: String
+        area4: String
     }
 
     input PhotoPost{

@@ -9,9 +9,10 @@ export default gql`
   type Query {
     searchVisits(
         query: String
-        location: String
-        locationScale: Float
-        priority: String
+        weather: String
+        area1: String
+        area2: [String]
+        sorting: String
     ): SearchVisitsResponse!
   }
 `;
