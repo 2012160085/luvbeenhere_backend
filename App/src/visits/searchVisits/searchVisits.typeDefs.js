@@ -13,6 +13,7 @@ export default gql`
         area1: String
         area2: [String]
         sorting: String
+        ts: String
     ): SearchVisitsResponse!
   }
 `;

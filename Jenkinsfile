@@ -27,5 +27,15 @@ pipeline {
             }
         }
     }
-    post { cleanup { cleanWs() } }
+    post { 
+        cleanup {
+             cleanWs() 
+        }
+        success {
+            sh """curl -d "title=[배포성공] lbh-backend #${BUILD_NUMBER}&content=${BUILD_URL}" -X POST http://luvbeenhere.com:5000/send"""
+        }
+        failure {
+            sh """curl -d "title=[배포실패] lbh-backend #${BUILD_NUMBER}&content=${BUILD_URL}" -X POST http://luvbeenhere.com:5000/send"""
+        }
+    }
 }
